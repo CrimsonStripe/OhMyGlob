@@ -39,7 +39,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(allowCrossDomain);
   app.use(app.router);
-  app.use(express.static(__dirname);
+  app.use(express.static(__dirname));
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: "newevkflsls" }));
 });
