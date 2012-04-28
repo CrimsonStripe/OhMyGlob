@@ -31,6 +31,13 @@ app.configure('production', function(){
 
 app.get('/', routes.index);
 
+app.get('/rooms', routes.rooms);
+
+// Seeding actions
+app.put('/room/:id/seed/add', routes.addSeed);
+app.put('/room/:id/seed/like', routes.likeSeed);
+app.put('/room/:id/seed/boo', routes.booSeed);
+
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });

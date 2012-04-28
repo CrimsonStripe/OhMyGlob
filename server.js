@@ -3,19 +3,52 @@
 
 var express = require('express');
 var fs      = require('fs');
+var routes	= require('./routes');
 
 //  Local cache for static content [fixed and loaded at startup]
+/*
 var zcache = { 'index.html': '' };
 zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
+*/
 
 // Create "express" server.
 var app  = express.createServer();
 
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
+
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
+  app.use(express.errorHandler());
+});
 
 /*  =====================================================================  */
 /*  Setup route handlers.  */
 /*  =====================================================================  */
 
+
+app.get('/', routes.index);
+
+app.get('/rooms', routes.rooms);
+
+// Seeding actions
+app.put('/room/:id/seed/add', routes.addSeed);
+app.put('/room/:id/seed/like', routes.likeSeed);
+app.put('/room/:id/seed/boo', routes.booSeed);
+
+
+
+
+/* OpenShift
 // Handler for GET /health
 app.get('/health', function(req, res){
     res.send('1');
@@ -31,6 +64,11 @@ app.get('/asciimo', function(req, res){
 app.get('/', function(req, res){
     res.send(zcache['index.html'], {'Content-Type': 'text/html'});
 });
+*/
+
+
+
+
 
 
 //  Get the environment variables we need.
