@@ -22,9 +22,17 @@
 </head>
 <body>
 	<script type="text/javascript">
-	
-	var sp = getSpotifyApi(1);
-	var models = sp.require("sp://import/scripts/api/models");
+var sp = getSpotifyApi(1);
+var models = sp.require("sp://import/scripts/api/models");
+jQuery.ajaxSettings.traditional = true;  
+
+function pausecomp(millis)
+ {
+  var date = new Date();
+  var curDate = null;
+  do { curDate = new Date(); }
+  while(curDate-date < millis);
+}
 	</script>
 	<div id="container">
 		<script type="text/x-handlebars">
@@ -49,13 +57,13 @@
 						{{title}}
 					{{/view}}
 					{{#collection contentBinding="OhMyGlob.selectedRoomController.users"}}
-						{{content.fbid}}
+						User - {{content.fbid}}
 					{{/collection}}
 					{{#collection contentBinding="OhMyGlob.selectedRoomController.playlist"}}
-						{{content.title}}
+						Song - {{content.title}}
 					{{/collection}}
 					{{#collection contentBinding="OhMyGlob.selectedRoomController.seeds"}}
-						{{content.title}}
+						Seed - {{content.title}}
 					{{/collection}}
 				{{else}}
 					No room selected.
