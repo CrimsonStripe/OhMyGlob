@@ -16,7 +16,7 @@ var server = new Mongolian(
 							"ec2-50-19-137-189.compute-1.amazonaws.com",
 							"ec2-184-73-46-2.compute-1.amazonaws.com"
 							);
-var server = new Mongolian; // for local db
+//var server = new Mongolian; // for local db
 var db = server.db("test");
 
 //  Local cache for static content [fixed and loaded at startup]

@@ -3,9 +3,21 @@
  */
 
 var _ = require('underscore');
+var ObjectId = require('mongolian').ObjectId;
 module.exports = function(app, db) {
 
 	var rooms = db.collection("rooms");
+
+	app.get('/room/:id', function(req, res){
+		rooms.findOne({_id: new ObjectId(req.params.id) }, function(err, doc){
+			if (err || doc == undefined) {
+				res.json({error:err});
+			} else {
+				doc._id = doc._id.toString();
+				res.json({room:doc});
+			}
+		});
+	});
 
 	/* 
 	 * Get a list rooms
