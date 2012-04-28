@@ -53,13 +53,13 @@ OhMyGlob.seedsController = Em.ArrayProxy.create({
 
 	getSpotifyArtist: function(displayName, callback) {
 		var search = new models.Search(displayName);
-
 		search.observe(models.EVENT.CHANGE, function() {
 			var chosenArtist;
 			search.artists.forEach(function(artist) {
 				chosenArtist = chosenArtist || artist;
 			});
-			callback(artist);
+console.log(chosenArtist.data);
+			callback(chosenArtist.data);
 		});
 
 		search.appendNext();
@@ -72,7 +72,6 @@ OhMyGlob.seedsController = Em.ArrayProxy.create({
 
 	saveArtist: function(displayName) {
 		var self = this;
-
 		this.getSpotifyArtist(displayName, function(artist){
 			Api('/room/' + self.get('roomId') + "/seed/add", {
 				method: "PUT",
@@ -195,6 +194,8 @@ OhMyGlob.RoomView = Em.View.extend({
 //bootstrap
 OhMyGlob.roomsController.populateRooms();
 
+document.getElementById('container').style.display = 'block';
+
 // Login to Facebook
 var sp = getSpotifyApi(1);
 var auth = sp.require('sp://import/scripts/api/auth');
@@ -212,7 +213,7 @@ auth.authenticateWithFacebook('266810276747668', ['user_about_me'], {
 			success: function(resp) {
 				console.log(resp.id);
 				var userId = resp.id;
-				
+
 				// Get friends
 				$.ajax({
 					url: "https://graph.facebook.com/me/friends",
@@ -221,10 +222,10 @@ auth.authenticateWithFacebook('266810276747668', ['user_about_me'], {
 					dataType: "jsonp",
 					success: function(resp) {
 						OhMyGlob.LoginUser( userId, accessToken, resp.data );
-					});
+					}
 				});
-				
-				
+
+
 				// Send user id and access token to db
 			}
 		});
