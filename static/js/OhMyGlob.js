@@ -141,3 +141,46 @@ OhMyGlob.RoomView = Em.View.extend({
 
 //bootstrap
 OhMyGlob.roomsController.populateRooms();
+
+// Login to Facebook
+var sp = getSpotifyApi(1);
+var auth = sp.require('sp://import/scripts/api/auth');
+
+auth.authenticateWithFacebook('266810276747668', ['user_about_me'], {
+
+	onSuccess : function(accessToken, ttl) {
+		console.log("Success! Here's the access token: " + accessToken);
+		console.log(ttl);
+		$.ajax({
+			url: "https://graph.facebook.com/me",
+			type: "GET",
+			data: {"access_token":accessToken},
+			dataType: "jsonp",
+			success: function(resp) {
+				console.log(resp.id);
+				// Send user id and access token to db
+				OhMyGlob.LoginUser( resp.id, accessToken );
+			}
+		});
+	},
+
+	onFailure : function(error) {
+		console.log("Authentication failed with error: " + error);
+	},
+
+	onComplete : function() { }
+});
+
+OhMyGlob.LoginUser = function(userId, accessToken) {
+	$.ajax({
+		url: 'http://pandorify-coutram.rhcloud.com/login',
+		type: 'post',
+		data: {userId: userId, accessToken: accessToken},
+		dataType: 'json',
+		success: function(resp) {
+			// Show rooms
+			$('#container').fadeIn();
+			console.log(resp);
+		}
+	});
+};
