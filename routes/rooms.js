@@ -19,7 +19,7 @@ module.exports = function(app, db) {
 		});
 	});
 
-	/* 
+	/*
 	 * Get a list rooms
 	 * { owned: [], friends: []}
 	 * Room
@@ -34,29 +34,29 @@ module.exports = function(app, db) {
 		/*
 		if ( ! req.user.fbid) {
 			// todo, return
-		} 
+		}
 		*/
-		
-		var fbIds = (req.session && req.session.friends) 
-				  ? _pluck(req.session.friends, 'name')
+
+		var fbIds = (req.session && req.session.friends)
+				  ? _.pluck(req.session.friends, 'name')
 				  : [];
 		if (req.session && req.session.userId) {
 			fbIds.push( req.session.userId);
 		}
-		
+
 		rooms.find({'users.fbid': {$in : fbIds} }).toArray( function(err, array){
 			if (err) {
 				console.log("error");
-				console.log(err); 
+				console.log(err);
 				res.json({error:err});
 			} else {
 				array.map(function(i){i._id = i._id.toString()});
 				console.log(array);
 				res.json({rooms : array});
 			}
-		});		
+		});
 	});
-	
+
 	// Create a room
 	// todo change to POST
 	app.post('/rooms', function(req, res){
@@ -70,7 +70,7 @@ module.exports = function(app, db) {
 				} else {
 					console.log("no user id");
 				}
-		
+
 			rooms.insert(newRoom, function(err, doc){
 				doc._id = doc._id.toString();
 				console.log("inserted");
