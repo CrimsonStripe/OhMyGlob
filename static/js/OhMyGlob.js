@@ -10,19 +10,19 @@ OhMyGlob.Room = Em.Object.extend({
 
 OhMyGlob.Seed = Em.Object.extend({
 	_id: 0,
+	spotifyId: 0,
 	title: "",
-	type: "", //artist|song
+	seedType: "", //artist|song
 	action: "", //added|liked|booed
 	seed: null
 });
 
 OhMyGlob.Song = OhMyGlob.Seed.extend({
-	spotifyId: 0,
-	type: "song"
+	seedType: "song"
 });
 
 OhMyGlob.Artist = OhMyGlob.Seed.extend({
-	type: "artist",
+	seedType: "artist",
 	action: "added"
 });
 
@@ -34,6 +34,60 @@ OhMyGlob.User = Em.Object.extend({
 });
 
 //CONTROLLERS
+
+OhMyGlob.CreateSeedView = Em.TextField.extend({
+	insertNewline: function() {
+		var value = this.get('value');
+
+		if (value) {
+			OhMyGlob.seedsController.saveArtist(value);
+			this.set('value', '');
+		}
+	}
+});
+
+OhMyGlob.seedsController = Em.ArrayProxy.create({
+	content: [],
+
+	roomIdBinding: 'OhMyGlob.selectedRoomController.content._id',
+
+	getSpotifyArtist: function(displayName, callback) {
+		var search = new models.Search(displayName);
+
+		search.observe(models.EVENT.CHANGE, function() {
+			var chosenArtist;
+			search.artists.forEach(function(artist) {
+				chosenArtist = chosenArtist || artist;
+			});
+			callback(artist);
+		});
+
+		search.appendNext();
+	},
+
+	createArtist: function(data) {
+		var artist = OhMyGlob.Artist.create(data);
+		this.pushObject(artist);
+	},
+
+	saveArtist: function(displayName) {
+		var self = this;
+
+		this.getSpotifyArtist(displayName, function(artist){
+			Api('/room/' + self.get('roomId') + "/seed/add", {
+				method: "PUT",
+				data: {
+					displayName: artist.name,
+					spotifyId: artist.uri.replace('spotify', 'spotify-WW'),
+					seedType: "artist"
+				}
+			}, function( response){
+console.log(response);
+				self.createArtist(response.seed);
+			});
+		});
+	}
+});
 
 OhMyGlob.roomsController = Em.ArrayProxy.create({
 	content: [],
@@ -66,17 +120,16 @@ OhMyGlob.roomsController = Em.ArrayProxy.create({
 	}
 });
 
-OhMyGlob.selectedRoomController = Ember.Object.create({
+OhMyGlob.set('selectedRoomController', Ember.Object.create({
 	content: null,
 	users: null,
 	playlist: null,
-	seeds: null,
+	seedsBinding: 'OhMyGlob.seedsController.content',
 	loadRoom: function(){
 		var self = this;
 
 		this.set('users', Ember.A([]));
 		this.set('playlist', Ember.A([]));
-		this.set('seeds', Ember.A([]));
 
 		Api('/room/' + this.content._id, function(data){
 			var x = 0,
@@ -96,11 +149,11 @@ OhMyGlob.selectedRoomController = Ember.Object.create({
 
 			len = data.room.seeds && data.room.seeds.length;
 			for( ; z < len; z++ ){
-				self.seeds.pushObject(OhMyGlob.Seed.create(data.room.seeds[z]));
+				OhMyGlob.seedsController.createArtist(data.room.seeds[z]);
 			}
 		});
 	}.observes('content')
-});
+}));
 
 //VIEWS FOR ROOMS SELECTOR
 OhMyGlob.RoomsView = Em.View.extend({
@@ -114,8 +167,8 @@ OhMyGlob.RoomsView = Em.View.extend({
 
 OhMyGlob.RoomListView = Em.View.extend({
 	click: function() {
-	    var content = this.get('content');
-	    OhMyGlob.selectedRoomController.set('content', content);
+		var content = this.get('content');
+		OhMyGlob.selectedRoomController.set('content', content);
 	}
 });
 
