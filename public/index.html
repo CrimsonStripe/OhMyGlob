@@ -38,13 +38,19 @@
 			{{/each}}
 		</div>
 		<div id="room">
-			{{#if OhMyGlob.selectedRoomController.content}}
-				{{#view OhMyGlob.RoomView}}
-					{{title}}
-				{{/view}}
-			{{else}}
-				No room selected.
-			{{/if}}
+			<div id="room-title">
+				{{#if OhMyGlob.selectedRoomController.content}}
+					{{#view OhMyGlob.RoomView}}
+						{{title}}
+					{{/view}}
+					{{#collection contentBinding="OhMyGlob.selectedRoomController.users"}}
+						{{content.fbid}}
+					{{/collection}}
+				{{else}}
+					No room selected.
+				{{/if}}
+			</div>
+			
 		</div>
 		</script>
 	</div>
