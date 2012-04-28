@@ -38,10 +38,10 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(allowCrossDomain);
-  app.use(app.router);
   app.use(express.static(__dirname));
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: "newevkflsls" }));
+	app.use(app.router);
 });
 
 app.configure('development', function(){
