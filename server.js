@@ -10,8 +10,9 @@ var everyauth = require('everyauth');
 
 
 // Setup Mongo
-var mongodb = require('mongodb');
-// var server = new mongodb.Server("127.0.0.1", 27017, {});
+var Mongolian = require('mongolian');
+var server = new Mongolian;//('mongo://');
+var db = server.db("test");
 
 //  Local cache for static content [fixed and loaded at startup]
 /*
@@ -89,7 +90,7 @@ function bootRoutes(app, db) {
   });
 };
 
-bootRoutes(app, mongodb);
+bootRoutes(app, db);
 
 /*
 app.get('/', routes.index);
