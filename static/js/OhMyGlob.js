@@ -1,3 +1,5 @@
+jQuery.ajaxSettings.traditional = true;
+
 OhMyGlob = Ember.Application.create();
 
 //MODELS
@@ -119,6 +121,12 @@ OhMyGlob.roomsController = Em.ArrayProxy.create({
 	}
 });
 
+
+function getSpotifyID(song) {
+    var uri = song.tracks[0].foreign_id;
+    return uri.replace('spotify-WW', 'spotify');
+}
+
 OhMyGlob.set('selectedRoomController', Ember.Object.create({
 	content: null,
 	users: null,
@@ -147,12 +155,46 @@ OhMyGlob.set('selectedRoomController', Ember.Object.create({
 			}
 
 			len = data.room.seeds && data.room.seeds.length;
-			for( ; z < len; z++ ){
+			var artist_id = 0;
+            for( ; z < len; z++ ){
 				OhMyGlob.seedsController.createArtist(data.room.seeds[z]);
+                //console.log(data.room.seeds[z]);
+                artist_id = data.room.seeds[z].spotifyId;
+                //console.log('artist_id: ', artist_id)
 			}
+            
+            var url = 'http://developer.echonest.com/api/v4/playlist/basic?api_key=N6E4NIOVYMTHNDM8J&callback=?';
+            //console.log(artist_id);
+            $.getJSON(url, { 'artist_id': artist_id, 'format':'jsonp', limit: true, 'results': 50, 'type':'artist-radio', bucket : ['id:spotify-WW', 'tracks']}, function(data) {
+                if (checkResponse(data)) {
+                    var curTracks = []
+                    var song = 0;
+                    for (var i = 0; i < data.response.songs.length; i++) {
+                        song = data.response.songs[i];
+                    }
+                    var uri = getSpotifyID(song);
+                    models.player.play(uri);
+                } else {
+                    info("trouble getting results");
+                }
+            });
 		});
 	}.observes('content')
 }));
+
+function checkResponse(data) {
+    if (data.response) {
+        if (data.response.status.code != 0) {
+            error("Whoops... Unexpected error from server. " + data.response.status.message);
+            log(JSON.stringify(data.response));
+        } else {
+            return true;
+        }
+    } else {
+        error("Unexpected response from server");
+    }
+    return false;
+}
 
 //VIEWS FOR ROOMS SELECTOR
 OhMyGlob.RoomsView = Em.View.extend({
