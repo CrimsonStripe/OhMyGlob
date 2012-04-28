@@ -213,7 +213,7 @@ auth.authenticateWithFacebook('266810276747668', ['user_about_me'], {
 			success: function(resp) {
 				console.log(resp.id);
 				var userId = resp.id;
-				
+
 				// Get friends
 				$.ajax({
 					url: "https://graph.facebook.com/me/friends",
@@ -222,10 +222,10 @@ auth.authenticateWithFacebook('266810276747668', ['user_about_me'], {
 					dataType: "jsonp",
 					success: function(resp) {
 						OhMyGlob.LoginUser( userId, accessToken, resp.data );
-					});
+					}
 				});
-				
-				
+
+
 				// Send user id and access token to db
 			}
 		});
