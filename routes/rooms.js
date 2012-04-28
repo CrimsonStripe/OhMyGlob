@@ -66,6 +66,9 @@ module.exports = function(app, db) {
 			var newRoom = {	title: req.body.title };
 				if (req.session && req.session.userId) {
 					newRoom.users = [{fbid: req.session.userId}];
+					console.log("has user_id: "+req.session.userId);
+				} else {
+					console.log("no user id");
 				}
 		
 			rooms.insert(newRoom, function(err, doc){

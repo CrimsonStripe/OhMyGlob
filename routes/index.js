@@ -15,11 +15,15 @@ module.exports = function(app, db) {
 	});
 
 	app.post('/login', function(req, res){
-		req.session.userId = req.body.userId;
-		req.session.accessToken = req.body.accessToken;
-		req.session.friends = req.body.friends;
+		if (req.session == undefined) {
+			res.json({error:"req.session is undefined"});
+		} else {
+			req.session.userId = req.body.userId;
+			req.session.accessToken = req.body.accessToken;
+			req.session.friends = req.body.friends;
+			res.json({friends:req.session.friends});
+		}	
 		
-		res.json({friends:req.session.friends});
 	});
 
 };
