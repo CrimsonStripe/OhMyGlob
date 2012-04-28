@@ -34,12 +34,12 @@ var allowCrossDomain = function(req, res, next) {
 }
 
 app.configure(function(){
-  app.set('views', __dirname + '/public');
+  app.set('views', __dirname);
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(allowCrossDomain);
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(__dirname);
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: "newevkflsls" }));
 });
