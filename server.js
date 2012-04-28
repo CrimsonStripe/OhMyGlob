@@ -28,10 +28,17 @@ zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 // Create "express" server.
 var app  = express.createServer();
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+
+    next();
+}
+
 app.configure(function(){
   app.set('views', __dirname + '/public');
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(allowCrossDomain);
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 	app.use(express.cookieParser());
@@ -69,8 +76,8 @@ everyauth.facebook
 	/*
 	.entryPath('/auth')
 	.callbackPath('/auth/callback')
-	.scope('email')    
-	*/                
+	.scope('email')
+	*/
   .redirectPath('/')
 	;
 
