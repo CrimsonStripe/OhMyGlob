@@ -11,5 +11,6 @@
     ],
 	"RequiredPermissions": [
 		"http://*.echonest.com",
+		"http://pandorify-coutram.rhcloud.com"
 	]
 }
