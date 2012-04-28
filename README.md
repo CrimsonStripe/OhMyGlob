@@ -1,4 +1,4 @@
 OhMyGlob
 ========
 
-We like cheese.
+We like cheese!
