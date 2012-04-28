@@ -21,7 +21,11 @@
 	<script type="text/javascript" src="static/js/ember-0.9.7.1.min.js"></script>
 </head>
 <body>
-		
+	<script type="text/javascript">
+	
+	var sp = getSpotifyApi(1);
+	var models = sp.require("sp://import/scripts/api/models");
+	</script>
 	<div id="container" style="display:none;">
 		<script type="text/x-handlebars">
 		<div id="rooms">

@@ -10,19 +10,19 @@ OhMyGlob.Room = Em.Object.extend({
 
 OhMyGlob.Seed = Em.Object.extend({
 	_id: 0,
-	spotifyId: 0,
 	title: "",
-	seedType: "", //artist|song
+	type: "", //artist|song
 	action: "", //added|liked|booed
 	seed: null
 });
 
 OhMyGlob.Song = OhMyGlob.Seed.extend({
-	seedType: "song"
+	spotifyId: 0,
+	type: "song"
 });
 
 OhMyGlob.Artist = OhMyGlob.Seed.extend({
-	seedType: "artist",
+	type: "artist",
 	action: "added"
 });
 
@@ -34,49 +34,6 @@ OhMyGlob.User = Em.Object.extend({
 });
 
 //CONTROLLERS
-
-OhMyGlob.seedsController = Em.ArrayProxy.create({
-	content: [],
-
-	roomIdBinding: 'OhMyGlob.selectedRoomController.content._id',
-
-	getSpotifyArtist: function(displayName, callback) {
-	    var search = new models.Search(displayName);
-
-	    search.observe(models.EVENT.CHANGE, function() {
-	    	var chosenArtist;
-	        search.artists.forEach(function(artist) {
-	            chosenArtist = chosenArtist || artist;
-	        });
-	        callback(artist);
-	    });
-
-	    search.appendNext();
-	},
-
-	createArtist: function(data) {
-		var artist = OhMyGlob.Artist.create(data);
-		this.pushObject(artist);
-	},
-
-	saveArtist: function(displayName) {
-		var self = this;
-
-		this.getSpotifyArtist(displayName, function(artist){
-			Api('/room/' + self.get('roomId') + "/seed/add", {
-				method: "PUT",
-				data: {
-					displayName: artist.name,
-					spotifyId: artist.uri.replace('spotify', 'spotify-WW'),
-					seedType: "artist"
-				}
-			}, function( response){
-console.log(response);
-				self.createArtist(response.seed);
-			});
-		});
-	}
-});
 
 OhMyGlob.roomsController = Em.ArrayProxy.create({
 	content: [],
@@ -109,24 +66,7 @@ OhMyGlob.roomsController = Em.ArrayProxy.create({
 	}
 });
 
-//VIEWS FOR ROOMS SELECTOR
-OhMyGlob.RoomsView = Em.View.extend({
-	totalBinding: 'OhMyGlob.roomsController.length',
-
-	totalString: function() {
-		var total = this.get('total');
-		return total + (total === 1 ? " room" : " rooms");
-	}.property('total')
-});
-
-OhMyGlob.RoomListView = Em.View.extend({
-	click: function() {
-	    var content = this.get('content');
-	    OhMyGlob.selectedRoomController.set('content', content);
-	}
-});
-
-OhMyGlob.set('selectedRoomController', Ember.Object.create({
+OhMyGlob.selectedRoomController = Ember.Object.create({
 	content: null,
 	users: null,
 	playlist: null,
@@ -160,7 +100,24 @@ OhMyGlob.set('selectedRoomController', Ember.Object.create({
 			}
 		});
 	}.observes('content')
-}));
+});
+
+//VIEWS FOR ROOMS SELECTOR
+OhMyGlob.RoomsView = Em.View.extend({
+	totalBinding: 'OhMyGlob.roomsController.length',
+
+	totalString: function() {
+		var total = this.get('total');
+		return total + (total === 1 ? " room" : " rooms");
+	}.property('total')
+});
+
+OhMyGlob.RoomListView = Em.View.extend({
+	click: function() {
+	    var content = this.get('content');
+	    OhMyGlob.selectedRoomController.set('content', content);
+	}
+});
 
 OhMyGlob.CreateRoomView = Em.TextField.extend({
 	insertNewline: function() {
@@ -184,3 +141,46 @@ OhMyGlob.RoomView = Em.View.extend({
 
 //bootstrap
 OhMyGlob.roomsController.populateRooms();
+
+// Login to Facebook
+var sp = getSpotifyApi(1);
+var auth = sp.require('sp://import/scripts/api/auth');
+
+auth.authenticateWithFacebook('266810276747668', ['user_about_me'], {
+
+	onSuccess : function(accessToken, ttl) {
+		console.log("Success! Here's the access token: " + accessToken);
+		console.log(ttl);
+		$.ajax({
+			url: "https://graph.facebook.com/me",
+			type: "GET",
+			data: {"access_token":accessToken},
+			dataType: "jsonp",
+			success: function(resp) {
+				console.log(resp.id);
+				// Send user id and access token to db
+				OhMyGlob.LoginUser( resp.id, accessToken );
+			}
+		});
+	},
+
+	onFailure : function(error) {
+		console.log("Authentication failed with error: " + error);
+	},
+
+	onComplete : function() { }
+});
+
+OhMyGlob.LoginUser = function(userId, accessToken) {
+	$.ajax({
+		url: 'http://pandorify-coutram.rhcloud.com/login',
+		type: 'post',
+		data: {userId: userId, accessToken: accessToken},
+		dataType: 'json',
+		success: function(resp) {
+			// Show rooms
+			$('#container').fadeIn();
+			console.log(resp);
+		}
+	});
+};
