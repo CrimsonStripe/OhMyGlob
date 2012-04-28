@@ -38,7 +38,7 @@ module.exports = function(app, db) {
 		*/
 
 		var fbIds = (req.session && req.session.friends)
-				  ? _.pluck(req.session.friends, 'name')
+				  ? _.pluck(req.session.friends, 'id')
 				  : [];
 		if (req.session && req.session.userId) {
 			fbIds.push( req.session.userId);
