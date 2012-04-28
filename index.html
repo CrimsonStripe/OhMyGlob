@@ -44,6 +44,7 @@
 		</div>
 		<div id="room">
 			<div id="room-title">
+				{{view OhMyGlob.CreateRoomView id="new-room" placeholder="Add An Artist"}}
 				{{#if OhMyGlob.selectedRoomController.content}}
 					{{#view OhMyGlob.RoomView}}
 						{{title}}
