@@ -41,7 +41,7 @@ OhMyGlob.roomsController = Em.ArrayProxy.create({
 					title: title
 				}
 			}, function( response){
-				self.createRoom(response);
+				self.createRoom(response.room);
 			});
 		},
 

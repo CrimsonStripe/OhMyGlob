@@ -8,33 +8,23 @@ var Api = function(route, options, callback){
 		data = options.data || {},
 		method = options.method || "GET";
 
-    switch (route) {
-	    case "/rooms":
-	    	if ( method === "GET" ){
-		    	response.rooms = [
-		    	    {
-		    	    	_id: getRandomId(),
-		    	    	title: "Mike's Room",
-		    	    	createdDate : (new Date()).getTime()
-		    	    },
-		    	    {
-		    	    	_id: getRandomId(),
-		    	    	title: "Chris's Room",
-		    	    	createdDate : (new Date()).getTime()
-		    	    }
-		    	];
-	    	} else if ( method === "POST" ){
-	    		response = {
-	    				_id : getRandomId(),
-	    				title : data.title,
-	    				createdDate : (new Date()).getTime()
-	    		};
-	    	}
-	    	break;
-	    default:
-	        console.log("unknown route");
-    }
-    callback(response, responseCode);
+	$.ajax({
+		url: "/rooms",
+		type: method,
+		data: data,
+		dataType: "json",
+		error: function(e){console.log(e)},
+		complete: function(){console.log("complete")},
+		success: function(resp) {
+			if (resp.error) {
+				console.log(error);
+			} else {
+				callback(resp, responseCode);
+				console.log("success rooms "+method);
+				console.log(resp);
+			}
+		}
+	});
 
     var idIncrement = 0;
     function getRandomId(){

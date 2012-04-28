@@ -3,10 +3,16 @@
  * GET home page.
  */
  
+var fs = require('fs');
+
 module.exports = function(app, db) {
 
 	app.get('/', function(req, res){
-	  res.render('index', { title: 'Express!' })
+		fs.readFile('public/index.html', function (err, html) {
+		  if (err) throw err;
+			res.contentType("text/html");
+		  res.send(html);
+		});
 	});
 
 };

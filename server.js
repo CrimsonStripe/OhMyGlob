@@ -16,7 +16,7 @@ var server = new Mongolian(
 							"ec2-50-19-137-189.compute-1.amazonaws.com",
 							"ec2-184-73-46-2.compute-1.amazonaws.com"
 							);
-//var server = new Mongolian;
+var server = new Mongolian; // for local db
 var db = server.db("test");
 
 //  Local cache for static content [fixed and loaded at startup]
@@ -29,8 +29,7 @@ zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 var app  = express.createServer();
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
+  app.set('views', __dirname + '/public');
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);

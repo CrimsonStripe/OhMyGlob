@@ -34,18 +34,28 @@ module.exports = function(app, db) {
 			} else {
 				array.map(function(i){i._id = i._id.toString()});
 				console.log(array);
-				res.json(array);
-				/*
-				var output = [];
-								
-				array.forEach(function(item){
-					output.push({ title: item.title, users: items.users });
-					console.log(item.title);
-				});
-				res.json( output );
-				*/
+				res.json({rooms : array});
 			}
 		});		
+	});
+	
+	// Create a room
+	// todo change to POST
+	app.post('/rooms', function(req, res){
+		if (! req.body.title) {
+			res.json({error:"Need to pass a title"});
+		} else {
+			var newRoom = {
+				title: req.body.title,
+				users: [ {fbid: '124567'}],
+				};
+			rooms.insert(newRoom, function(err, doc){
+				doc._id = doc._id.toString();
+				console.log("inserted");
+				console.log(doc);
+				res.json({room : doc});
+			});
+		}
 	});
 
 };
