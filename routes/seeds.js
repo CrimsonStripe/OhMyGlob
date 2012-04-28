@@ -2,16 +2,20 @@
  * Seed controls
  */
 
-exports.addSeed = function(req, res){
-  res.render('index', { title: 'Express' })
-};
+module.exports = function(app, db) {
 
-exports.likeSeed = function(req, res){
-  res.render('index', { title: 'Express' })
-};
+	app.put('/room/:id/seed/add', function(req, res){
+	  res.render('index', { title: 'Express' })
+	});
 
-exports.booSeed = function(req, res){
-  res.render('index', { title: 'Express' })
+	app.put('/room/:id/seed/like', function(req, res){
+	  res.render('index', { title: 'Express' })
+	});
+
+	app.put('/room/:id/seed/boo', function(req, res){
+	  res.render('index', { title: 'Express' })
+	});
+
 };
 
 
