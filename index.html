@@ -17,7 +17,7 @@
 	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
-	<script type="text/javascript" src="static/js/jquery.1.7.2.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery.min.js"></script>
 	<script type="text/javascript" src="static/js/ember-0.9.7.1.min.js"></script>
 </head>
 <body>
@@ -44,7 +44,7 @@
 		</div>
 		<div id="room">
 			<div id="room-title">
-				{{view OhMyGlob.CreateRoomView id="new-room" placeholder="Add An Artist"}}
+				{{view OhMyGlob.CreateSeedView id="new-room" placeholder="Add An Artist"}}
 				{{#if OhMyGlob.selectedRoomController.content}}
 					{{#view OhMyGlob.RoomView}}
 						{{title}}
@@ -55,8 +55,8 @@
 					{{#collection contentBinding="OhMyGlob.selectedRoomController.playlist"}}
 						Song - {{content.title}}
 					{{/collection}}
-					{{#collection contentBinding="OhMyGlob.selectedRoomController.seeds"}}
-						Seed - {{content.title}}
+					{{#collection contentBinding="OhMyGlob.seedsController.content"}}
+						Seed - {{content.displayName}}
 					{{/collection}}
 				{{else}}
 					No room selected.

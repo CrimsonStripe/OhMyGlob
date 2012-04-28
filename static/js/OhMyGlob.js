@@ -149,7 +149,7 @@ OhMyGlob.set('selectedRoomController', Ember.Object.create({
 
 			len = data.room.seeds && data.room.seeds.length;
 			for( ; z < len; z++ ){
-				OhMyGlob.seedsController.createArtist(data.room.seeds[z]));
+				OhMyGlob.seedsController.createArtist(data.room.seeds[z]);
 			}
 		});
 	}.observes('content')
