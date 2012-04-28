@@ -6,7 +6,6 @@ var fs      = require('fs');
 var routes	= require('./routes');
 var path 		= require('path');
 var walk 		= require('walk');
-//var everyauth = require('everyauth');
 
 
 // Setup Mongo
@@ -43,7 +42,6 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: "newevkflsls" }));
-	//app.use(everyauth.middleware());
 });
 
 app.configure('development', function(){
@@ -53,32 +51,6 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler());
 });
-
-
-// Every Auth
-/*
-everyauth.facebook
-  .appId('266810276747668')
-  .appSecret('975916ad710cf81fc86411ec7a24a03f')
-  .handleAuthCallbackError( function (req, res) {
-    // If a user denies your app, Facebook will redirect the user to
-    // /auth/facebook/callback?error_reason=user_denied&error=access_denied&error_description=The+user+denied+your+request.
-    // This configurable route handler defines how you want to respond to
-    // that.
-    // If you do not configure this, everyauth renders a default fallback
-    // view notifying the user that their authentication failed and why.
-		console.log("fb error");
-  })
-  .findOrCreateUser( function (session, accessToken, accessTokExtra, fbUserMetadata) {
-    // find or create user logic goes here
-		console.log("logged in?");
-		console.log(fbUserMetadata);
-  })
-	.entryPath('/auth')
-	.callbackPath('/auth/callback')
-  .redirectPath('/')
-	;
-*/
 
 
 /*  =====================================================================  */
@@ -100,19 +72,6 @@ function bootRoutes(app, db) {
 };
 
 bootRoutes(app, db);
-
-/*
-app.get('/', routes.index);
-
-app.get('/rooms', routes.rooms);
-
-// Seeding actions
-app.put('/room/:id/seed/add', routes.addSeed);
-app.put('/room/:id/seed/like', routes.likeSeed);
-app.put('/room/:id/seed/boo', routes.booSeed);
-*/
-
-
 
 /* OpenShift
 // Handler for GET /health

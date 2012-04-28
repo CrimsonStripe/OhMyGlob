@@ -31,11 +31,11 @@ module.exports = function(app, db) {
 						};
 					
 					doc.seeds.push( newSeed )
-					rooms.save(doc, function(err){
+					rooms.save(doc, function(err, doc){
 						if (err) {
 							res.json({error:'Failed to '+req.params.action+' seed'});
 						} else {
-							res.json({success:true});
+							res.json({success:true, seed: doc});
 						}
 					});
 					
