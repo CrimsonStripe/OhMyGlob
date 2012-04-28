@@ -2,8 +2,7 @@
 /*
  * GET home page.
  */
-
-var fs 		= require('fs');
+var fs = require('fs');
 
 module.exports = function(app, db) {
 
@@ -18,7 +17,9 @@ module.exports = function(app, db) {
 	app.post('/login', function(req, res){
 		req.session.user = req.body.userId;
 		req.session.accessToken = req.body.accessToken;
-		res.json({success:true});
+		req.session.friends = req.body.friends;
+		
+		res.json({friends:req.session.friends});
 	});
 
 };

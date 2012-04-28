@@ -37,8 +37,14 @@ module.exports = function(app, db) {
 		} 
 		*/
 		
-		fbid = '124567';
-		rooms.find({'users.fbid': fbid}).toArray( function(err, array){
+		var fbIds = (req.session && req.session.friends) 
+				  ? _pluck(req.session.friends, 'name')
+				  : [];
+		if (req.session && req.session.userId) {
+			fbIds.push( req.session.userId);
+		}
+		
+		rooms.find({'users.fbid': {$in : fbIds} }).toArray( function(err, array){
 			if (err) {
 				console.log("error");
 				console.log(err); 
@@ -57,10 +63,11 @@ module.exports = function(app, db) {
 		if (! req.body.title) {
 			res.json({error:"Need to pass a title"});
 		} else {
-			var newRoom = {
-				title: req.body.title,
-				users: [ {fbid: '124567'}],
-				};
+			var newRoom = {	title: req.body.title };
+				if (req.session && req.session.userId) {
+					newRoom.users = [{fbid: req.session.userId}];
+				}
+		
 			rooms.insert(newRoom, function(err, doc){
 				doc._id = doc._id.toString();
 				console.log("inserted");
