@@ -9,12 +9,16 @@ var Api = function(route, options, callback){
 		method = options.method || "GET";
 
 	$.ajax({
-		url: "/rooms",
+		url: "http://pandorify-coutram.rhcloud.com" + route,
 		type: method,
 		data: data,
 		dataType: "json",
-		error: function(e){console.log(e)},
-		complete: function(){console.log("complete")},
+		error: function(e){
+			console.log(e);
+		},
+		complete: function(){
+			console.log("complete");
+		},
 		success: function(resp) {
 			if (resp.error) {
 				console.log(error);

@@ -14,5 +14,10 @@ module.exports = function(app, db) {
 		  res.send(html);
 		});
 	});
+	
+	app.post('/login', function(req, res){
+		req.session.user = req.body.user;
+		res.json({success:true});
+	});
 
 };

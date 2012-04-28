@@ -6,7 +6,7 @@ var fs      = require('fs');
 var routes	= require('./routes');
 var path 		= require('path');
 var walk 		= require('walk');
-var everyauth = require('everyauth');
+//var everyauth = require('everyauth');
 
 
 // Setup Mongo
@@ -28,15 +28,22 @@ zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 // Create "express" server.
 var app  = express.createServer();
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+
+    next();
+}
+
 app.configure(function(){
   app.set('views', __dirname + '/public');
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(allowCrossDomain);
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: "newevkflsls" }));
-	app.use(everyauth.middleware());
+	//app.use(everyauth.middleware());
 });
 
 app.configure('development', function(){
@@ -49,6 +56,7 @@ app.configure('production', function(){
 
 
 // Every Auth
+/*
 everyauth.facebook
   .appId('266810276747668')
   .appSecret('975916ad710cf81fc86411ec7a24a03f')
@@ -66,13 +74,17 @@ everyauth.facebook
 		console.log("logged in?");
 		console.log(fbUserMetadata);
   })
-	/*
 	.entryPath('/auth')
 	.callbackPath('/auth/callback')
+<<<<<<< HEAD
 	.scope('email')    
-	*/                
+=======
+	.scope('email')
+	*/
+>>>>>>> 126b52648ba385e2c10396bcdd699d201a038ea5
   .redirectPath('/')
 	;
+*/
 
 
 /*  =====================================================================  */
@@ -85,7 +97,6 @@ function bootRoutes(app, db) {
     , walker  = walk.walk(dir, { followLinks: false });
   walker.on('file', function(root, stat, next) {
     if(path.extname(stat.name) === '.js') {
-			console.log("reqqing: "+path.join(root, stat.name));
 		  require(path.join(root, stat.name))(app, db);
     }
     next();
@@ -159,8 +170,6 @@ process.on('exit', function() { terminator(); });
     process.on(element, function() { terminator(element); });
 });
 
-// Setup Everyauth
-everyauth.helpExpress(app);
 
 //  And start the app on that interface (and port).
 app.listen(port, ipaddr, function() {

@@ -30,7 +30,8 @@ module.exports = function(app, db) {
 						action:				req.params.action
 						};
 					
-					doc.seeds.push( newSeed, function(err){
+					doc.seeds.push( newSeed )
+					rooms.save(doc, function(err){
 						if (err) {
 							res.json({error:'Failed to '+req.params.action+' seed'});
 						} else {
