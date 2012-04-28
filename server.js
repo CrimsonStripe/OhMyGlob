@@ -11,7 +11,12 @@ var everyauth = require('everyauth');
 
 // Setup Mongo
 var Mongolian = require('mongolian');
-var server = new Mongolian;//('mongo://');
+var server = new Mongolian(
+							"ec2-174-129-59-27.compute-1.amazonaws.com",
+							"ec2-50-19-137-189.compute-1.amazonaws.com",
+							"ec2-184-73-46-2.compute-1.amazonaws.com"
+							);
+//var server = new Mongolian;
 var db = server.db("test");
 
 //  Local cache for static content [fixed and loaded at startup]
