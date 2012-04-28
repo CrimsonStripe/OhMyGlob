@@ -1,15 +1,15 @@
 {
     "BundleType": "Application",
     "AppIcon": {
-        "18x18": "icon.png"
+        "18x18": "static/img/icon.png"
     },
     "AppName": {
-        "en": "demo2"
+        "en": "ohmyglob"
     },
     "SupportedLanguages": [
         "en"
     ],
 	"RequiredPermissions": [
-		"http://*.echonest.com"
+		"http://*.echonest.com",
 	]
 }
