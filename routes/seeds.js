@@ -39,7 +39,8 @@ module.exports = function(app, db) {
 						if (err) {
 							res.json({error:'Failed to '+req.params.action+' seed'});
 						} else {
-							res.json({success:true, seed: doc});
+							newSeed._id = doc._id.toString();
+							res.json({success:true, seed: newSeed});
 						}
 					});
 
