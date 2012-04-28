@@ -27,6 +27,7 @@ OhMyGlob.Artist = OhMyGlob.Seed.extend({
 });
 
 OhMyGlob.User = Em.Object.extend({
+	_id: 0,
 	username: "",
 	realName: "",
 	fbid: 0
@@ -66,9 +67,42 @@ OhMyGlob.roomsController = Em.ArrayProxy.create({
 });
 
 OhMyGlob.selectedRoomController = Ember.Object.create({
-	content: null
+	content: null,
+	users: null,
+	playlist: null,
+	seeds: null,
+	loadRoom: function(){
+		var self = this;
+
+		this.set('users', Ember.A([]));
+		this.set('playlist', Ember.A([]));
+		this.set('seeds', Ember.A([]));
+
+		Api('/room/' + this.content._id, function(data){
+			var x = 0,
+				y = 0,
+				z = 0,
+				len;
+
+			len = data.room.users && data.room.users.length;
+			for( ; x < len; x++ ){
+				self.users.pushObject(OhMyGlob.User.create(data.room.users[x]));
+			}
+
+			len = data.room.playlist && data.room.playlist.length;
+			for( ; y < len; y++ ){
+				self.playlist.pushObject(OhMyGlob.Song.create(data.room.playlist[x]));
+			}
+
+			len = data.room.seeds && data.room.seeds.length;
+			for( ; z < len; z++ ){
+				self.seeds.pushObject(OhMyGlob.Seed.create(data.room.seeds[z]));
+			}
+		});
+	}.observes('content')
 });
 
+//VIEWS FOR ROOMS SELECTOR
 OhMyGlob.RoomsView = Em.View.extend({
 	totalBinding: 'OhMyGlob.roomsController.length',
 
@@ -94,6 +128,11 @@ OhMyGlob.CreateRoomView = Em.TextField.extend({
 			this.set('value', '');
 		}
 	}
+});
+
+//VIEWS FOR SINGLE ROOM
+OhMyGlob.UsersView = Em.View.extend({
+	contentBinding: 'OhMyGlob.selectedRoomController.users'
 });
 
 OhMyGlob.RoomView = Em.View.extend({
