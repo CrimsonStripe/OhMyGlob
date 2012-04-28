@@ -17,7 +17,7 @@
 	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery.min.js"></script>
 	<script type="text/javascript" src="static/js/ember-0.9.7.1.min.js"></script>
 </head>
 <body>
@@ -36,27 +36,6 @@
 					{{content.title}}
 				{{/view}}
 			{{/each}}
-		</div>
-		<div id="room">
-			<div id="room-title">
-				{{#if OhMyGlob.selectedRoomController.content}}
-					{{#view OhMyGlob.RoomView}}
-						{{title}}
-					{{/view}}
-					{{#collection contentBinding="OhMyGlob.selectedRoomController.users"}}
-						{{content.fbid}}
-					{{/collection}}
-					{{#collection contentBinding="OhMyGlob.selectedRoomController.playlist"}}
-						{{content.title}}
-					{{/collection}}
-					{{#collection contentBinding="OhMyGlob.selectedRoomController.seeds"}}
-						{{content.title}}
-					{{/collection}}
-				{{else}}
-					No room selected.
-				{{/if}}
-			</div>
-			
 		</div>
 		</script>
 	</div>
