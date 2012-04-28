@@ -21,6 +21,11 @@
 	<script type="text/javascript" src="static/js/ember-0.9.7.1.min.js"></script>
 </head>
 <body>
+	<script type="text/javascript">
+	
+	var sp = getSpotifyApi(1);
+	var models = sp.require("sp://import/scripts/api/models");
+	</script>
 	<div id="container">
 		<script type="text/x-handlebars">
 		<div id="rooms">
@@ -36,6 +41,27 @@
 					{{content.title}}
 				{{/view}}
 			{{/each}}
+		</div>
+		<div id="room">
+			<div id="room-title">
+				{{#if OhMyGlob.selectedRoomController.content}}
+					{{#view OhMyGlob.RoomView}}
+						{{title}}
+					{{/view}}
+					{{#collection contentBinding="OhMyGlob.selectedRoomController.users"}}
+						{{content.fbid}}
+					{{/collection}}
+					{{#collection contentBinding="OhMyGlob.selectedRoomController.playlist"}}
+						{{content.title}}
+					{{/collection}}
+					{{#collection contentBinding="OhMyGlob.selectedRoomController.seeds"}}
+						{{content.title}}
+					{{/collection}}
+				{{else}}
+					No room selected.
+				{{/if}}
+			</div>
+			
 		</div>
 		</script>
 	</div>
