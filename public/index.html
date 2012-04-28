@@ -21,19 +21,33 @@
 	<script type="text/javascript" src="static/js/ember-0.9.7.1.min.js"></script>
 </head>
 <body>
-	<h1>Rooms</h1>
-	<script type="text/x-handlebars">
-	{{view OhMyGlob.CreateRoomView id="new-room" placeholder="Add A Room"}}
+	<div id="container">
+		<script type="text/x-handlebars">
+		<div id="rooms">
+			<strong>Rooms</strong>
+			{{view OhMyGlob.CreateRoomView id="new-room" placeholder="Add A Room"}}
 
-	{{#view OhMyGlob.RoomsView id="stats"}}
-		{{totalString}} exist
-	{{/view}}
+			{{#view OhMyGlob.RoomsView id="stats"}}
+				{{totalString}} exist
+			{{/view}}
 
-	{{#collection contentBinding="OhMyGlob.roomsController"}}
-		{{content.title}} is a room that exists
-	{{/collection}}
-	</script>
-
+			{{#each OhMyGlob.roomsController}}
+				{{#view OhMyGlob.RoomListView contentBinding="this"}}
+					{{content.title}}
+				{{/view}}
+			{{/each}}
+		</div>
+		<div id="room">
+			{{#if OhMyGlob.selectedRoomController.content}}
+				{{#view OhMyGlob.RoomView}}
+					{{title}}
+				{{/view}}
+			{{else}}
+				No room selected.
+			{{/if}}
+		</div>
+		</script>
+	</div>
 	<script src="static/js/Api.js"></script>
 	<script src="static/js/OhMyGlob.js"></script>
 </body>
